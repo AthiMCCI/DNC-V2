@@ -1,0 +1,29 @@
+/*
+
+Module: datasrc.css
+
+Function:
+    Implementation code for DataSource Page.
+
+Copyright and License:
+    See accompanying LICENSE file for copyright and license information.
+
+Author:
+    AthiSankar, MCCI Corporation   October 2023
+
+*/
+
+.datasrc,
+.fixed-width-button {
+    width: 1px;
+    height: 30px;
+    padding: 0;
+    margin: 0;
+}
+
+.refresh-icon-button {
+    margin-left: -13%;
+    
+}
+
+/**** end of datasrc.css ****/

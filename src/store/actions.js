@@ -1,0 +1,11 @@
+// action - customization actions
+export const SET_MENU = '@customization/SET_MENU';
+export const MENU_TOGGLE = '@customization/MENU_TOGGLE';
+export const MENU_OPEN = '@customization/MENU_OPEN';
+export const SET_FONT_FAMILY = '@customization/SET_FONT_FAMILY';
+export const SET_BORDER_RADIUS = '@customization/SET_BORDER_RADIUS';
+export const SET_MY_USER = '@customization/SET_MY_USER';
+export const SET_MY_TOKEN = '@customization/SET_MY_TOKEN';
+export const SET_MY_CONFIG = '@customization/SET_MY_CONFIG';
+export const SET_PRIMARY_COLOR = '@customization/SET_PRIMARY_COLOR';
+export const SET_THEME_MODE = '@customization/SET_THEME_MODE';

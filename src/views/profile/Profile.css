@@ -1,0 +1,43 @@
+/*
+
+Module: Profile.css
+
+Function:
+    Implementation code for User Account and Change Password css.
+
+Copyright and License:
+    See accompanying LICENSE file for copyright and license information.
+
+Author:
+    AthiSankar, MCCI Corporation   October 2023
+
+*/
+
+.tab1 {
+    font-size: 14px;
+
+}
+.profilebutton {
+    margin-left: 1%;
+    margin-top: 2%;
+}
+.profilebutton0 {
+    margin-left: 1%;
+    margin-top: 2%;
+}
+.centered-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* Add this to your CSS or SCSS file */
+.centered-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: left;
+    padding: 1em; /* Adjust as needed */
+  }
+  
+
+/**** end of Profile.css ****/
