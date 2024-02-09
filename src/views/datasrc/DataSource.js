@@ -483,8 +483,25 @@ export default function DataSource() {
     };
 
     const handleExportCsv = (fileName) => {
-        // Create a CSV string from the rows data
-        const csvData = data.map((row) => Object.values(row).join(',')).join('\n');
+        // Filter out the 'actions' column from the columns
+        const filteredColumns = thcolumns.filter((column) => column.field !== 'actions');
+        // Extract column headers
+        const headers = filteredColumns.map((column) => column.headerName);
+        // Filter out the 'actions' column from the data
+        const filteredData = data.map((row) => {
+            const filteredRow = {};
+            Object.keys(row).forEach((key) => {
+                if (key !== 'actions') {
+                    // Exclude the 'actions' column
+                    filteredRow[key] = row[key];
+                }
+            });
+            return filteredRow;
+        });
+        // Create a CSV string with headers and data
+        let csvData = headers.join(',') + '\n';
+        csvData += filteredData.map((row) => Object.values(row).join(',')).join('\n');
+
         // Create a blob with the CSV data
         const blob = new Blob([csvData], { type: 'text/csv' });
         // Create a temporary link to download the CSV file

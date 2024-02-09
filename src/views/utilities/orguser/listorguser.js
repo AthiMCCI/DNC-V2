@@ -462,8 +462,24 @@ export default function ListOrgUser(props) {
         setCsvFileName(event.target.value);
     };
     const handleExportCsv = (fileName) => {
-        // Create a CSV string from the rows data
-        const csvData = rows.map((row) => Object.values(row).join(',')).join('\n');
+        // Filter out the 'actions' column from the columns for CSV export
+        const filteredColumns = thcolumns.filter((column) => column.field !== 'actions');
+        // Extract column headers for the CSV
+        const headers = filteredColumns.map((column) => column.headerName).join(',');
+
+        // Generate CSV data string, excluding the 'actions' data
+        const csvRows = rows.map((row) => {
+            return filteredColumns
+                .map((column) => {
+                    const cellValue = row[column.field];
+                    return `"${cellValue}"`; // Wrap each cell value in quotes to handle commas within data
+                })
+                .join(',');
+        });
+
+        // Combine headers and row data in CSV format
+        const csvData = [headers, ...csvRows].join('\n');
+
         // Create a blob with the CSV data
         const blob = new Blob([csvData], { type: 'text/csv' });
         // Create a temporary link to download the CSV file

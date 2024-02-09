@@ -313,8 +313,20 @@ export default function ListGateway(props) {
         setCsvFileName(event.target.value);
     };
     const handleExportCsv = (fileName) => {
-        // Create a CSV string from the rows data
-        const csvData = rows.map((row) => Object.values(row).join(',')).join('\n');
+        // Exclude the 'actions' column from the columns
+        const filteredColumns = thcolumns.filter((column) => column.field !== 'actions');
+        // Extract column headers
+        const headers = filteredColumns.map((column) => column.headerName);
+        // Create a CSV string with headers and data
+        let csvData = headers.join(',') + '\n';
+        csvData += rows
+            .map((row) => {
+                // Exclude the 'actions' column from each row
+                const rowData = filteredColumns.map((column) => row[column.field]);
+                return rowData.join(',');
+            })
+            .join('\n');
+
         // Create a blob with the CSV data
         const blob = new Blob([csvData], { type: 'text/csv' });
         // Create a temporary link to download the CSV file
@@ -388,7 +400,7 @@ export default function ListGateway(props) {
                 <DialogTitle>Enter CSV File Name</DialogTitle>
                 <DialogContent>
                     <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
-                        <TextField id="linkmail" label="Enter Name" fullWidth value={csvFileName} onChange={handleCsvFileNameChange} />
+                        <TextField id="linkmail" label="Enter Name" size="small" value={csvFileName} onChange={handleCsvFileNameChange} />
                     </Box>
                 </DialogContent>
                 <DialogActions>
