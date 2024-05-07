@@ -290,11 +290,8 @@ export default function ListUser(props) {
         setCsvFileName(event.target.value);
     };
     const handleExportCsv = (fileName) => {
-        // Filter out the 'actions' column from the headers
-        const filteredColumns = thcolumns.filter((column) => column.field !== 'actions');
-        const headers = filteredColumns.map((column) => column.headerName).join(',');
-        // Create CSV data string with headers followed by row data, excluding 'actions' data
-        const csvData = [headers, ...rows.map((row) => filteredColumns.map((col) => `"${row[col.field]}"`).join(','))].join('\n');
+        // Create a CSV string from the rows data
+        const csvData = rows.map((row) => Object.values(row).join(',')).join('\n');
         // Create a blob with the CSV data
         const blob = new Blob([csvData], { type: 'text/csv' });
         // Create a temporary link to download the CSV file

@@ -21,6 +21,7 @@ import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
 import MainCard from './../../../ui-component/cards/MainCard';
 import { constobj } from './../../../misc/constants';
 import { ResponsiveContainer } from 'recharts';
+import Map from './map';
 
 const pieParams = { height: 200, margin: { right: 5 } };
 const palette = ['red', 'blue', 'green'];
@@ -255,6 +256,7 @@ export default function Dashboard() {
                     </Box>
                 </MainCard>
             </Stack>
+            <Map />
         </MainCard>
     );
 }

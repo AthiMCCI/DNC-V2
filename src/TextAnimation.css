@@ -1,0 +1,51 @@
+@keyframes scaleUpFadeIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  85% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.text-animation-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  text-align: center;
+  overflow: hidden;
+  color: #fff; /* Adjust text color as needed */
+}
+
+.abbreviation {
+  font-size: 5rem; /* Adjust size as needed */
+  color: #fff; /* Adjust color as needed */
+  margin-bottom: 20px; /* Space between abbreviation and animated text */
+  margin-left:-70px
+}
+
+.animated-text {
+  display: flex; /* Use flex to better control the layout of the animated text */
+  justify-content: center; /* Ensures text is centered within its container */
+  margin-top: -15px;
+}
+
+.animated-letter {
+  display: inline-block; /* Treat each letter as an inline element for better alignment */
+  opacity: 0; /* Start fully transparent */
+  animation: scaleUpFadeIn 0.8s forwards; /* Apply the Netflix-like animation */
+  color: #fff; /* Adjust color as needed */
+  font-size: 2rem; /* Adjust size as needed */
+  margin: 0 4px; /* Adjust spacing between letters if necessary */
+}
+
+/* Ensure your other animations (@keyframes) are also included if needed */

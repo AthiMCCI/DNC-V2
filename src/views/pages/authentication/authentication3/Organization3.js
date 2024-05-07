@@ -468,23 +468,8 @@ export default function Organization() {
         setCsvFileName(event.target.value);
     };
     const handleExportCsv = (fileName) => {
-        // Exclude the Actions column from the headers
-        const headers = thcolumns
-            .filter((column) => column.field !== 'actions') // Exclude the 'actions' column
-            .map((column) => column.headerName)
-            .join(',');
-
-        // Create CSV data string with headers followed by row data, excluding the Actions column from the data as well
-        const csvData = [
-            headers,
-            ...data.map((row) =>
-                thcolumns
-                    .filter((column) => column.field !== 'actions') // Exclude the 'actions' column for each row as well
-                    .map((col) => `"${row[col.field]}"`)
-                    .join(',')
-            )
-        ].join('\n');
-
+        // Create a CSV string from the rows data
+        const csvData = data.map((row) => Object.values(row).join(',')).join('\n');
         // Create a blob with the CSV data
         const blob = new Blob([csvData], { type: 'text/csv' });
         // Create a temporary link to download the CSV file

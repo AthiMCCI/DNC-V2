@@ -177,13 +177,6 @@ const ProfileSection = ({ firstName }) => {
                                                 <Typography style={{ color: 'gray' }} variant="h5">
                                                     WELCOME{' '}
                                                 </Typography>
-                                                <Typography
-                                                    style={{ marginLeft: '5%', color: 'Black' }}
-                                                    variant="subtitle1"
-                                                    component="div"
-                                                >
-                                                    {firstName}
-                                                </Typography>
                                             </Stack>
                                         </Stack>
                                     </Box>

@@ -153,9 +153,14 @@ export default function AddRemUser() {
     const handleDeleteConfirmed = async () => {
         setDeleteConfirmationOpen(false);
         if (deleteItemId !== null) {
-            let dresp = await removeUser(deleteItemId);
-            toast.success(dresp.message);
-            getUserInfo(myorg);
+            try {
+                let dresp = await removeUser(deleteItemId);
+                toast.success('User removed successfully');
+            } catch (error) {
+                toast.error(`User remove failed!`);
+            } finally {
+                getUserInfo(myorg);
+            }
         }
     };
     const processRowUpdate = async (newRow) => {
@@ -210,12 +215,14 @@ export default function AddRemUser() {
         mydict['data'] = { users: [selUser] };
         try {
             const myresp = await requestToAddUser(mydict);
-            await getUserInfo(myorg); // Refresh user list after adding
+            // await getUserInfo(myorg); // Refresh user list after adding
             toast.success('User added successfully');
-            return true; // Return success flag
+            // return true; // Return success flag
         } catch (error) {
             toast.error(`Error: No User Found `);
-            return false; // Return error flag
+            // return false; // Return error flag
+        } finally {
+            getUserInfo(myorg);
         }
     }
 
@@ -253,7 +260,7 @@ export default function AddRemUser() {
                 headers: myHeaders,
                 body: JSON.stringify(mydict)
             };
-            var url = new URL(DNC_URL + '/org');
+            var url = new URL(DNC_URL + '/org/' + mydict.org);
             fetch(url, requestOptions)
                 .then((response) => response.json())
                 .then((data) => {
@@ -287,7 +294,7 @@ export default function AddRemUser() {
                 headers: myHeaders,
                 body: JSON.stringify(mydict)
             };
-            var url = new URL(DNC_URL + '/org');
+            var url = new URL(DNC_URL + '/org/' + myorg);
             fetch(url, requestOptions)
                 .then((response) => response.json())
                 .then((data) => {
@@ -431,11 +438,8 @@ export default function AddRemUser() {
         setCsvFileName(event.target.value);
     };
     const handleExportCsv = (fileName) => {
-        // Filter out the 'actions' column from the headers
-        const filteredColumns = thcolumns.filter((column) => column.field !== 'actions');
-        const headers = filteredColumns.map((column) => column.headerName).join(',');
-        // Create CSV data string with headers followed by row data, excluding 'actions' data
-        const csvData = [headers, ...rows.map((row) => filteredColumns.map((col) => `"${row[col.field]}"`).join(','))].join('\n');
+        // Create a CSV string from the rows data
+        const csvData = rows.map((row) => Object.values(row).join(',')).join('\n');
         // Create a blob with the CSV data
         const blob = new Blob([csvData], { type: 'text/csv' });
         // Create a temporary link to download the CSV file

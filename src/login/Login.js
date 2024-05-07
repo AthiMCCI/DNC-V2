@@ -21,6 +21,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch } from 'react-redux';
 import { SET_MY_USER, SET_MY_TOKEN, SET_MY_CONFIG } from 'store/actions';
+import TextAnimation from './../TextAnimation';
+import '../BackgroundAnimation.css'; // Ensure this is imported to apply the background animation
 
 /*
 
@@ -179,8 +181,13 @@ export default function Login({ setToken }) {
         return (
             <div className="maincontainer">
                 <div className="container-fluid">
+                    <div className="logo-right-top"></div> {/* Logo added here */}
                     <div class="row no-gutter">
-                        <div class="col-md-6 d-none d-md-flex bg-image"></div>
+                        {/* <div class="col-md-6 d-none d-md-flex bg-image"></div> */}
+                        <div className="col-md-6 d-none d-md-flex">
+                            <div className="background-animation-container"></div>
+                            <TextAnimation text="Data Normalization Console" abbreviation="DNC" />
+                        </div>
                         <div class="col-md-6 bg-light">
                             <div class="login d-flex align-items-center py-5">
                                 <div class="container">
@@ -234,8 +241,22 @@ export default function Login({ setToken }) {
                         <h4>Welcome-123, {authenticatedUser}!</h4>
                     </div>
                 )}
-                <footer className="footer">
+                {/* <footer className="footer">
                     DNC {dncv} | Server v{constobj.SW_VER}
+                </footer> */}
+                <footer className="footer">
+                    <div className="footer-content">
+                        DNC {dncv} | Server v{constobj.SW_VER}
+                        <div className="footer-links">
+                            <a href="https://store.mcci.com/" target="_blank" rel="noopener noreferrer">
+                                Store
+                            </a>{' '}
+                            |
+                            <a href="https://mcci.com/" target="_blank" rel="noopener noreferrer">
+                                Website
+                            </a>
+                        </div>
+                    </div>
                 </footer>
             </div>
         );

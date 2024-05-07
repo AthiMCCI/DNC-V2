@@ -25,8 +25,6 @@ import { GridToolbarContainer, GridToolbarColumnsButton, GridToolbarFilterButton
 import { Button } from '@mui/material';
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
-import { SaveAlt as PdfIcon } from '@mui/icons-material';
-import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { constobj } from './../../misc/constants';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
@@ -65,39 +63,36 @@ export default function ListGateway(props) {
             headerName: 'Actions',
             width: 100,
             cellClassName: 'actions',
-            getActions: ({ id }) => {
-                return [
-                    <GridActionsCellItem
-                        title="Edit Gateway"
-                        icon={<EditIcon />}
-                        label="Edit"
-                        color="inherit"
-                        onClick={handleEditGw(id)}
-                    />,
-                    <GridActionsCellItem
-                        title="Track Gateway"
-                        icon={<TrackChangesIcon />}
-                        label="Edit"
-                        color="inherit"
-                        onClick={handleShowGwmr(id)}
-                    />,
-                    <GridActionsCellItem
-                        icon={<DeleteIcon />}
-                        label="Delete"
-                        color="inherit"
-                        onClick={() => {
-                            // console.log('Delete clicked: ', row);
-                            handleDeleteConfirmation(id - 1);
-                        }}
-                    />
-                ];
-            }
+            renderCell: ({ row }) => [
+                <GridActionsCellItem
+                    title="Edit Gateway"
+                    icon={<EditIcon />}
+                    label="Edit"
+                    color="inherit"
+                    onClick={handleEditGw(row.id)}
+                />,
+                <GridActionsCellItem
+                    title="Track Gateway"
+                    icon={<TrackChangesIcon />}
+                    label="Edit"
+                    color="inherit"
+                    onClick={() => {
+                        handleShowGwmr(row);
+                    }}
+                />,
+                <GridActionsCellItem
+                    icon={<DeleteIcon />}
+                    label="Delete"
+                    color="inherit"
+                    onClick={() => {
+                        handleDeleteConfirmation(row.id - 1);
+                    }}
+                />
+            ]
         }
     ];
 
     const [dynamicColumns, setDynamicColumns] = React.useState(thcolumns);
-
-    // console.log('ListGw component rendering Row Data: ', rows);
 
     const measureTextWidth = (text, font) => {
         const canvas = document.createElement('canvas');
@@ -111,7 +106,6 @@ export default function ListGateway(props) {
     };
 
     const handleDeleteConfirmation = async (id) => {
-        // console.log('Deleting Gateway with ID:', id, rows);
         setSelId(id);
         setOpenCaptchaDialog(true);
     };
@@ -188,10 +182,9 @@ export default function ListGateway(props) {
         return maxWidths;
     };
 
-    const handleShowGwmr = (id) => () => {
+    const handleShowGwmr = (row) => {
         props.lgdata.cbf(2);
-        // console.log('List Gateway Name : ', rows[id - 1].name);
-        props.lgdata.cbfshw(rows[id - 1].name);
+        props.lgdata.cbfshw(row.name);
     };
 
     const handleEditGw = (id) => () => {
@@ -218,7 +211,6 @@ export default function ListGateway(props) {
     async function getGwInfo() {
         try {
             const mygw = await getGwData();
-            // console.log('Get GW Data: ', mygw);
             setRows(mygw);
         } catch (error) {
             // console.error('Error getting GW data:', error);
@@ -313,20 +305,8 @@ export default function ListGateway(props) {
         setCsvFileName(event.target.value);
     };
     const handleExportCsv = (fileName) => {
-        // Exclude the 'actions' column from the columns
-        const filteredColumns = thcolumns.filter((column) => column.field !== 'actions');
-        // Extract column headers
-        const headers = filteredColumns.map((column) => column.headerName);
-        // Create a CSV string with headers and data
-        let csvData = headers.join(',') + '\n';
-        csvData += rows
-            .map((row) => {
-                // Exclude the 'actions' column from each row
-                const rowData = filteredColumns.map((column) => row[column.field]);
-                return rowData.join(',');
-            })
-            .join('\n');
-
+        // Create a CSV string from the rows data
+        const csvData = rows.map((row) => Object.values(row).join(',')).join('\n');
         // Create a blob with the CSV data
         const blob = new Blob([csvData], { type: 'text/csv' });
         // Create a temporary link to download the CSV file
@@ -361,10 +341,9 @@ export default function ListGateway(props) {
             width: calculatedWidths[col.field] // Use the calculated width
         }));
         setDynamicColumns(updatedColumns);
-    }, [rows, selectedRows]);
+    }, [rows]);
 
     useEffect(() => {
-        // console.log('ListGw component rendering UesEffect');
         getGwInfo();
     }, []);
 
@@ -373,9 +352,9 @@ export default function ListGateway(props) {
             {showEditGw ? <Editgateway mydata={{ sdata: rows[selid - 1], hcb: makeGwEditable }} /> : null}
             <div style={{ height: 400, width: '105%', marginTop: -1, marginLeft: -20 }}>
                 <DataGrid
-                    columns={dynamicColumns}
                     slots={{ toolbar: GridToolbar }}
                     rows={rows}
+                    columns={dynamicColumns}
                     pageSize={(2, 5, 10, 20)}
                     rowsPerPageOptions={[10]}
                     checkboxSelection
@@ -400,7 +379,7 @@ export default function ListGateway(props) {
                 <DialogTitle>Enter CSV File Name</DialogTitle>
                 <DialogContent>
                     <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
-                        <TextField id="linkmail" label="Enter Name" size="small" value={csvFileName} onChange={handleCsvFileNameChange} />
+                        <TextField id="linkmail" label="Enter Name" fullWidth value={csvFileName} onChange={handleCsvFileNameChange} />
                     </Box>
                 </DialogContent>
                 <DialogActions>
@@ -421,7 +400,7 @@ export default function ListGateway(props) {
                             try {
                                 const updtrows = await deleteGw();
                                 if (updtrows) {
-                                    setRows(updtrows);
+                                    getGwInfo();
                                     toast.success('Gateway deleted successfully');
                                 }
                             } catch (error) {

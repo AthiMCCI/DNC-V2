@@ -1,0 +1,24 @@
+@keyframes backgroundPulse {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.background-animation-container {
+  animation: backgroundPulse 20s ease infinite;
+  background: linear-gradient(-45deg, #055cff, #b7b5d0, #08012f, #070015, #eee8ef);
+  background-size: 400% 400%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: -1;
+}
+

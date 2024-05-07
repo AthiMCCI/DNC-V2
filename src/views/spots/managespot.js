@@ -204,7 +204,7 @@ export default function ManageSpot(props) {
             fetch(url, requestOptions)
                 .then((response) => response.json())
                 .then((data) => {
-                    // console.log('Real Data: ', data);
+                    console.log('Real Data: ', data);
                     data.forEach((item, index) => {
                         let myrow = {};
                         myrow['id'] = index + 1;
@@ -299,31 +299,15 @@ export default function ManageSpot(props) {
         setCsvFileName(event.target.value);
     };
     const handleExportCsv = (fileName) => {
-        // Exclude the 'actions' column from the columns for CSV export
-        const filteredColumns = cols.filter((column) => column.field !== 'actions');
-        // Extract column headers
-        const headers = filteredColumns.map((column) => column.headerName);
-        // Generate CSV data string, excluding the 'actions' data
-        const csvRows = rows.map((row) => {
-            return filteredColumns
-                .map((column) => {
-                    const cellValue = row[column.field];
-                    // Handle potential commas in cell values
-                    return `"${cellValue}"`; // Wrap cell values in quotes to handle commas
-                })
-                .join(',');
-        });
-
-        // Combine headers and row data into a single CSV string
-        const csvData = [headers.join(','), ...csvRows].join('\n');
-
+        // Create a CSV string from the rows data
+        const csvData = rows.map((row) => Object.values(row).join(',')).join('\n');
         // Create a blob with the CSV data
         const blob = new Blob([csvData], { type: 'text/csv' });
         // Create a temporary link to download the CSV file
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${fileName}.csv`; // Set the file name
+        a.download = `${fileName}.csv`; // Set the file name with the user-entered name
         document.body.appendChild(a);
         a.click();
         // Clean up the temporary link

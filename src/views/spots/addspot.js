@@ -121,7 +121,7 @@ export default function AddSpot(props) {
 
     Description:
         The response JSON, and creates a dictionary (tagvdict) mapping each tag
-        to its unique values. The dictionary is resolved when the Promise is 
+        to its unique values. The dictionary is resolved when the Promise is
         fulfilled.
 
     Return:
@@ -167,7 +167,7 @@ export default function AddSpot(props) {
 
     const handleSave = (event) => {
         event.preventDefault();
-        // console.log('On Click Add Spot :', spotName);
+        console.log('On Click Add Spot :', spotName);
         let errorMessage = '';
         let false_flg = false;
         if (spotName.length < 3) {
@@ -195,6 +195,12 @@ export default function AddSpot(props) {
             sdict['latitude'] = latitude;
             sdict['longitude'] = longitude;
             sdict['status'] = status;
+
+            for (let i = 0; i < tdata.length; i++) {
+                sdict[tdata[i].toLowerCase()] = dynamicFields[tdata[i]] ? dynamicFields[tdata[i]] : '';
+            }
+            console.log('Add Spot Dict: ', sdict);
+
             onAddSpot(sdict);
         }
     };

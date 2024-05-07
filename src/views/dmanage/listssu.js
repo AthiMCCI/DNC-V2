@@ -204,22 +204,8 @@ export default function ListSsu(props) {
         setCsvFileName(event.target.value);
     };
     const handleExportCsv = (fileName) => {
-        // Filter out the 'actions' column from the headers
-        const filteredColumns = thcolumns.filter((column) => column.field !== 'actions');
-        const headers = filteredColumns.map((column) => column.headerName).join(',');
-        // Create CSV data string with headers followed by row data, excluding 'actions' data
-        const csvData = [
-            headers,
-            ...rows.map((row) =>
-                filteredColumns
-                    .map((col) => {
-                        // Return the row's cell data, handling undefined values
-                        const cellData = row[col.field] ? `"${row[col.field]}"` : '';
-                        return cellData;
-                    })
-                    .join(',')
-            )
-        ].join('\n');
+        // Create a CSV string from the rows data
+        const csvData = rows.map((row) => Object.values(row).join(',')).join('\n');
         // Create a blob with the CSV data
         const blob = new Blob([csvData], { type: 'text/csv' });
         // Create a temporary link to download the CSV file
@@ -346,14 +332,7 @@ export default function ListSsu(props) {
                 <DialogTitle>Enter CSV File Name</DialogTitle>
                 <DialogContent>
                     <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }} noValidate autoComplete="off">
-                        <TextField
-                            size="small"
-                            id="linkmail"
-                            label="Enter Name"
-                            fullWidth
-                            value={csvFileName}
-                            onChange={handleCsvFileNameChange}
-                        />
+                        <TextField id="linkmail" label="Enter Name" fullWidth value={csvFileName} onChange={handleCsvFileNameChange} />
                     </Box>
                 </DialogContent>
                 <DialogActions>

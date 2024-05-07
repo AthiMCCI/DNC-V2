@@ -43,12 +43,11 @@ function AddGateway(props) {
     const cfgmenu = useSelector((state) => state.customization.myConfig);
     const [myorgs, setMyorgs] = useState([]);
     const [selOrg, setSelOrg] = useState('');
-    const [myorglocs, setMyorglocs] = useState([]);
     const [selLoc, setSelLoc] = useState('');
+    const [selModel, setSelModel] = useState('');
     const [selRemarks, setSelRemarks] = useState('');
     const [selStatus, setSelStatus] = useState('');
     const [orgdict, setOrgdict] = React.useState({});
-    const [selModel, setSelModel] = useState('');
     const [selTech, setSelTech] = useState('');
     const [selNw, setSelNw] = useState('');
     const [selInsDate, setSelInsDate] = useState(null);
@@ -90,9 +89,6 @@ function AddGateway(props) {
     const [gwnameValid, setGwnameValid] = useState(false);
     const [insDateValid, setInsDateValid] = useState(false);
     const [simcardMakeValid, setSimcardMakeValid] = useState(false);
-    const [model, setModel] = useState('');
-    const [modelValid, setModelValid] = useState(false);
-    const [status, setStatus] = useState('');
     const [techValid, setTechValid] = useState(false);
     const [nwValid, setNwValid] = useState(false);
     const [statusValid, setStatusValid] = useState(false);
@@ -102,7 +98,7 @@ function AddGateway(props) {
         let insDateError = !selInsDate;
         let gwhwidError = !gwhwid || gwhwid.trim() === '';
         let simcardMakeError = !simcardMake || simcardMake.trim() === '';
-        let modelError = !model || model.trim() === '';
+        let modelError = !selModel || selModel.trim() === '';
         let techError = !selTech || selTech.trim() === '';
         let nwError = !selNw || selNw.trim() === '';
         let statusError = !selStatus || selStatus.trim() === '';
@@ -111,7 +107,6 @@ function AddGateway(props) {
         setInsDateValid(insDateError);
         setGwhwidValid(gwhwidError);
         setSimcardMakeValid(simcardMakeError);
-        setModelValid(modelError);
         setTechValid(techError);
         setNwValid(nwError);
         setStatusValid(statusError);
@@ -149,7 +144,7 @@ function AddGateway(props) {
         setSelLoc(nv);
     };
     const modelChange = async (e, nv) => {
-        setModel(nv);
+        setSelModel(nv); // Ensure this updates selModel, not model
     };
     const remChange = async (e, nv) => {
         setSelRemarks(nv);
@@ -174,10 +169,10 @@ function AddGateway(props) {
         mydict['tech'] = selTech || '';
         mydict['network'] = selNw || '';
         mydict['adate'] = selInsDate;
-        mydict['model'] = selModel;
         mydict['status'] = selStatus;
         mydict['orgid'] = selOrg;
         mydict['location'] = selLoc;
+        mydict['model'] = selModel;
         mydict['remarks'] = selRemarks;
         try {
             let sresp = await addGwData(mydict);
@@ -347,18 +342,9 @@ function AddGateway(props) {
             <Autocomplete
                 freeSolo
                 options={modeloptions}
+                size="small"
                 onChange={modelChange}
-                renderInput={(params) => (
-                    <TextField
-                        required
-                        error={modelValid}
-                        helperText={modelValid ? 'Model is required.' : ''}
-                        {...params}
-                        size="small"
-                        label="Model"
-                        onChange={(e) => setSelModel(e.target.value)}
-                    />
-                )}
+                renderInput={(params) => <TextField {...params} label="Model" onChange={(e) => setSelModel(e.target.value)} />}
             />
             <TextField
                 size="small"
@@ -388,18 +374,6 @@ function AddGateway(props) {
                 value={selNw}
                 onChange={changeNw}
             >
-                {/* {technology.length > 0 &&
-                    (selTech === 'Sigfox' ? (
-                        <MenuItem key="Sigfox" value="Sigfox">
-                            Sigfox
-                        </MenuItem>
-                    ) : (
-                        network.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))
-                    ))} */}
                 {selTech != null > 0 &&
                     nwdict[selTech].map((option) => (
                         <MenuItem key={option.value} value={option.value}>

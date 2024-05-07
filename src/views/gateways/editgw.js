@@ -43,26 +43,6 @@ const ColorButton = styled(Button)(({ theme }) => ({
     }
 }));
 
-// const statusoptions = ['Active-UP', 'Active-DN', 'Active-NiU', 'Moved', 'Not-Active'];
-// const remarkoptions = ['Hw Change', 'Location Change', 'Org Change'];
-// const modeloptions = ['MultiTech', 'Heltec', 'Sigfox'];
-// const locoptions = ['WeRadiate', 'MCCI', 'Tresca'];
-// const technology = [
-//     { id: 1, value: 'Sigfox', label: 'Sigfox' },
-//     { id: 2, value: 'LoRaWAN', label: 'LoRaWAN' }
-// ];
-// const network = [
-//     { value: 'TTN', label: 'TTN' },
-//     { value: 'Helium', label: 'Helium' },
-//     { value: 'machineQ', label: 'machineQ' },
-//     { value: 'Senet', label: 'Senet' },
-//     { value: 'Senra', label: 'Senra' },
-//     { value: 'Swisscom', label: 'Swisscom' },
-//     { value: 'Chirpstack', label: 'Chirpstack' },
-//     { value: 'Generic', label: 'Generic' },
-//     { value: 'Actility', label: 'Actility' }
-// ];
-
 const useStyles = makeStyles((theme) => ({
     dialogWrapper: {
         display: 'flex',
@@ -230,6 +210,7 @@ export default function EditDevice(props) {
         let gwdata = {
             name: props.mydata.sdata.name,
             hwid: props.mydata.sdata.hwid,
+            gwid: props.mydata.sdata.gwid,
             simmk: document.getElementById('simmk').value,
             ssusc: document.getElementById('ssusc').value,
             tech: selTech,
@@ -430,34 +411,6 @@ export default function EditDevice(props) {
                 });
         });
     }
-
-    // function getSpotData(myorg) {
-    //     return new Promise(async function (resolve, reject) {
-    //         let auth = sessionStorage.getItem('myToken');
-    //         var myHeaders = new Headers();
-    //         myHeaders.append('Authorization', 'Bearer ' + auth);
-    //         myHeaders.append('Content-Type', 'application/json');
-    //         var requestOptions = {
-    //             method: 'GET',
-    //             headers: myHeaders
-    //         };
-    //         var url = new URL(DNC_URL + '/spot/' + myorg);
-    //         let myslist = [];
-    //         fetch(url, requestOptions)
-    //             .then((response) => response.json())
-    //             .then((data) => {
-    //                 console.log('Real Data: ', data);
-    //                 let myloc = [];
-    //                 data.forEach((item) => {
-    //                     myloc.push(item.sname);
-    //                 });
-    //                 resolve(myloc);
-    //             })
-    //             .catch((error) => {
-    //                 reject(error);
-    //             });
-    //     });
-    // }
 
     const modelChange = async (e, nv) => {
         setSelModel(nv);

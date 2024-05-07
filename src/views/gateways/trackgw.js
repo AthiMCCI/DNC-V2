@@ -21,11 +21,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import EditGw from './editgw';
 import { useSelector } from 'react-redux';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
-import { GridToolbarContainer, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarDensitySelector } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import DownloadIcon from '@mui/icons-material/Download';
-import Button from '@mui/material/Button';
 
 export default function TrackGw(props) {
     const { DNC_URL } = { ...constobj };
@@ -35,8 +30,6 @@ export default function TrackGw(props) {
     const [showEditStock, setShowEditStock] = React.useState(false);
     const [showEditDmd, setShowEditDmd] = React.useState(false);
     const [selid, setSelId] = React.useState();
-    const [csvFileName, setCsvFileName] = React.useState('');
-    const [openDownloadDialog, setOpenDownloadDialog] = React.useState(false);
 
     let snhold = cfgmenu['alias']['Stock'] ? cfgmenu['alias']['Stock'] : 'Stock';
 
@@ -73,70 +66,6 @@ export default function TrackGw(props) {
             }
         }
     ];
-    const handleOpenDownloadDialog = () => {
-        setOpenDownloadDialog(true);
-    };
-    const handleCloseDownloadDialog = () => {
-        setOpenDownloadDialog(false);
-    };
-    const handleCsvFileNameChange = (event) => {
-        setCsvFileName(event.target.value);
-    };
-    const handleDownloadCsv = () => {
-        handleCloseDownloadDialog();
-        handleExportCsv(csvFileName);
-    };
-    const handleExportCsv = (fileName) => {
-        // Filter out the 'actions' column from the columns for CSV export
-        const filteredColumns = thcolumns.filter((column) => column.field !== 'actions');
-        // Extract column headers
-        const headers = filteredColumns.map((column) => column.headerName);
-        // Generate CSV data string, excluding the 'actions' data
-        const csvRows = rows.map((row) => {
-            return filteredColumns
-                .map((column) => {
-                    // Handle potential commas and quotes in cell values
-                    let cellValue = row[column.field] ? row[column.field].toString() : '';
-                    cellValue = cellValue.replace(/"/g, '""'); // Escape double quotes
-                    return `"${cellValue}"`; // Wrap cell values in quotes to handle commas and quotes
-                })
-                .join(',');
-        });
-
-        // Combine headers and row data into a single CSV string
-        const csvData = [headers.join(','), ...csvRows].join('\n');
-
-        // Create a blob with the CSV data
-        const blob = new Blob([csvData], { type: 'text/csv' });
-        // Create a temporary link to download the CSV file
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${fileName}.csv`; // Set the file name
-        document.body.appendChild(a);
-        a.click();
-        // Clean up the temporary link
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-    };
-
-    function CustomToolbar() {
-        return (
-            <GridToolbarContainer>
-                <GridToolbarColumnsButton />
-                <GridToolbarFilterButton />
-                <GridToolbarDensitySelector />
-                <Button
-                    style={{ fontSize: '13px' }}
-                    variant="text"
-                    startIcon={<DownloadIcon />}
-                    onClick={handleOpenDownloadDialog} // Make sure this line correctly references the function
-                >
-                    Export CSV
-                </Button>
-            </GridToolbarContainer>
-        );
-    }
 
     const handleEditHw = (id) => () => {
         // console.log('Handle Edit Hw');
@@ -194,8 +123,8 @@ export default function TrackGw(props) {
                 method: 'GET',
                 headers: myHeaders
             };
+
             var url = new URL(DNC_URL + '/tgwmr/' + props.tgdata.gwName);
-            // console.log('Get Track GW: ', props.tgdata.gwName);
             // console.log('Get Track GW-1: ', url);
             let myulist = [];
             fetch(url, requestOptions)
@@ -278,21 +207,8 @@ export default function TrackGw(props) {
                     slotProps={{
                         toolbar: { setRows, setRowModesModel }
                     }}
-                    slots={{
-                        toolbar: CustomToolbar
-                    }}
                 />
             </div>
-            <Dialog open={openDownloadDialog} onClose={handleCloseDownloadDialog}>
-                <DialogTitle>Enter CSV File Name</DialogTitle>
-                <DialogContent>
-                    <TextField size="small" label="CSV File Name" value={csvFileName} onChange={handleCsvFileNameChange} fullWidth />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseDownloadDialog}>Cancel</Button>
-                    <Button onClick={handleDownloadCsv}>Download</Button>
-                </DialogActions>
-            </Dialog>
         </div>
     );
 }

@@ -120,26 +120,12 @@ export default function ListOrgUser(props) {
         handleCloseDeleteDialog();
         setConfirmCaptchaDialogOpen(false);
         try {
-            await removeUser(selid);
-            getUserInfo(myorg);
-            toast.success('User has been successfully deleted!', {
-                position: 'top-right',
-                autoClose: 3000, // Close the toast after 3000 milliseconds (3 seconds)
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true
-            });
+            let dresp = await removeUser(selid);
+            toast.success('User removed successfully');
         } catch (error) {
-            // console.error('Error deleting user:', error);
-            toast.error('Failed to delete user. Please try again later.', {
-                position: 'top-right',
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true
-            });
+            toast.error(`User remove failed!`, error);
+        } finally {
+            getUserInfo(myorg);
         }
     };
 
@@ -153,7 +139,8 @@ export default function ListOrgUser(props) {
     };
     const makeUserEditable = () => {
         setShowEditOrgUser(false);
-        getUserInfo();
+        let myorg = sessionStorage.getItem('myOrg');
+        getUserInfo(myorg);
     };
     const [data, setData] = useState([
         { id: 1, name: '', email: '', firstname: '', lastname: '', status: '', role: '', lastlogin: '', logout: '' }
@@ -282,6 +269,7 @@ export default function ListOrgUser(props) {
     | console for debugging purposes. Resolves the Promise with the received
     | data if the request is successful.
     */
+
     function removeUser(id) {
         return new Promise(async function (resolve, reject) {
             let auth = sessionStorage.getItem('myToken');
@@ -297,7 +285,7 @@ export default function ListOrgUser(props) {
                 headers: myHeaders,
                 body: JSON.stringify(mydict)
             };
-            var url = new URL(DNC_URL + '/org');
+            var url = new URL(DNC_URL + '/org/' + myorg);
             fetch(url, requestOptions)
                 .then((response) => response.json())
                 .then((data) => {
@@ -462,24 +450,8 @@ export default function ListOrgUser(props) {
         setCsvFileName(event.target.value);
     };
     const handleExportCsv = (fileName) => {
-        // Filter out the 'actions' column from the columns for CSV export
-        const filteredColumns = thcolumns.filter((column) => column.field !== 'actions');
-        // Extract column headers for the CSV
-        const headers = filteredColumns.map((column) => column.headerName).join(',');
-
-        // Generate CSV data string, excluding the 'actions' data
-        const csvRows = rows.map((row) => {
-            return filteredColumns
-                .map((column) => {
-                    const cellValue = row[column.field];
-                    return `"${cellValue}"`; // Wrap each cell value in quotes to handle commas within data
-                })
-                .join(',');
-        });
-
-        // Combine headers and row data in CSV format
-        const csvData = [headers, ...csvRows].join('\n');
-
+        // Create a CSV string from the rows data
+        const csvData = rows.map((row) => Object.values(row).join(',')).join('\n');
         // Create a blob with the CSV data
         const blob = new Blob([csvData], { type: 'text/csv' });
         // Create a temporary link to download the CSV file

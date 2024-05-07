@@ -268,30 +268,15 @@ export default function ListUser(props) {
         setCsvFileName(event.target.value);
     };
     const handleExportCsv = (fileName) => {
-        // Exclude the 'actions' column from the columns for CSV export
-        const filteredColumns = thcolumns.filter((column) => column.field !== 'actions');
-        // Extract column headers
-        const headers = filteredColumns.map((column) => column.headerName);
-        // Generate CSV data string, excluding the 'actions' data
-        const csvRows = rows.map((row) => {
-            return filteredColumns
-                .map((column) => {
-                    // Handle potential commas and quotes in cell values
-                    let cellValue = row[column.field] ? row[column.field].toString() : '';
-                    cellValue = cellValue.replace(/"/g, '""'); // Escape double quotes
-                    return `"${cellValue}"`; // Wrap cell values in quotes to handle commas and quotes
-                })
-                .join(',');
-        });
-        // Combine headers and row data into a single CSV string
-        const csvData = [headers.join(','), ...csvRows].join('\n');
+        // Create a CSV string from the rows data
+        const csvData = rows.map((row) => Object.values(row).join(',')).join('\n');
         // Create a blob with the CSV data
         const blob = new Blob([csvData], { type: 'text/csv' });
         // Create a temporary link to download the CSV file
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${fileName}.csv`; // Set the file name
+        a.download = `${fileName}.csv`; // Set the file name with the user-entered name
         document.body.appendChild(a);
         a.click();
         // Clean up the temporary link

@@ -102,7 +102,7 @@ export default function EditOrganization(props) {
                 body: JSON.stringify(mydict)
             };
             let orgname = props.mydata.sdata.name;
-            var url = new URL(DNC_URL + '/org/' + orgname);
+            var url = new URL(DNC_URL + '/torg/' + orgname);
             fetch(url, requestOptions)
                 .then((response) => response.json())
                 .then((data) => {
