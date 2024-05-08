@@ -114,6 +114,24 @@ export default function ManageSpot(props) {
             } else if (mykeys[i] == 'status') {
                 mydict['headerName'] = 'Status';
                 mydict['width'] = 90; // Adjust the width as needed for the second and third columns
+            } else if (mykeys[i] == 'country') {
+                mydict['headerName'] = 'Country';
+                mydict['width'] = 110; // Adjust the width as needed for the second and fourth columns
+            } else if (mykeys[i] == 'state') {
+                mydict['headerName'] = 'State';
+                mydict['width'] = 110; // Adjust the width as needed for the second and fiveth columns
+            } else if (mykeys[i] == 'district') {
+                mydict['headerName'] = 'District';
+                mydict['width'] = 110; // Adjust the width as needed for the second and sixth columns
+            } else if (mykeys[i] == 'city') {
+                mydict['headerName'] = 'City';
+                mydict['width'] = 120; // Adjust the width as needed for the second and seventh columns
+            } else if (mykeys[i] == 'street') {
+                mydict['headerName'] = 'Street';
+                mydict['width'] = 110; // Adjust the width as needed for the second and eighth columns
+            } else if (i < 3) {
+                mydict['headerName'] = mykeys[i];
+                mydict['width'] = 100; // Adjust the width as needed for the second and nine columns
             } else {
                 mydict['headerName'] = mykeys[i];
                 // Dynamically calculate column width based on string length
