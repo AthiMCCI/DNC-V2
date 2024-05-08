@@ -2,7 +2,7 @@
 
 Module: editgm.js
 
-Function:
+Function:s
     Implementation code for Gateways.
 
 Copyright and License:

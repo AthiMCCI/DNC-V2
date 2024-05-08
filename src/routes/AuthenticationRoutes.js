@@ -15,9 +15,9 @@ import DataSources from 'views/datasrc/DataSource';
 import DeviceManage from 'views/dmanage/dmanage';
 
 // login option 3 routing
-const AuthLogin3 = Loadable(lazy(() => import('views/pages/authentication/authentication3/Login3')));
-const AuthRegister3 = Loadable(lazy(() => import('views/pages/authentication/authentication3/Register3')));
-const AuthOrganization3 = Loadable(lazy(() => import('views/pages/authentication/authentication3/Organization3')));
+const AuthLogin3 = Loadable(lazy(() => import('views/pages/authentication/authentication/Login3')));
+const AuthRegister3 = Loadable(lazy(() => import('views/pages/authentication/authentication/Register3')));
+const AuthOrganization3 = Loadable(lazy(() => import('views/pages/authentication/authentication/Organization3')));
 
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 

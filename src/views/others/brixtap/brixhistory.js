@@ -2,7 +2,7 @@
 
 Module: brixhistory.js
 
-Function:
+Function:s
     Implementation code for brixtap.
     .
 
